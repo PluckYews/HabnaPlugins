@@ -8,11 +8,11 @@ function frmProfile()
 	-- **v Set some window stuff v**
 	wProfile = Turbine.UI.Lotro.Window();	
 	wProfile:SetText( L["MPP"] );
-	wProfile:SetWidth( 250 );
+	wProfile:SetWidth( 495 );
 	wProfile:SetVisible( true );
 	wProfile:SetWantsKeyEvents( true );
-	--wProfile:SetZOrder( 2 );
-	--wProfile:Activate();
+	-- wProfile:SetZOrder( 2 );
+	-- wProfile:Activate();
 
 	wProfile.KeyDown = function( sender, args )
 		if ( args.Action == Turbine.UI.Lotro.Action.Escape ) then
@@ -46,7 +46,7 @@ function frmProfile()
 	buttonLoad = Turbine.UI.Lotro.Button();
 	buttonLoad:SetParent( wProfile );
 	buttonLoad:SetText( L["PWLoad"] );
-	buttonLoad:SetSize( buttonLoad:GetTextLength() * 11, 15 ); --Auto size with text lenght
+	buttonLoad:SetSize( buttonLoad:GetTextLength() * 11, 15 ); --Auto size with text length
 	buttonLoad:SetEnabled( false );
 
 	buttonLoad.Click = function( sender, args )
@@ -58,21 +58,21 @@ function frmProfile()
 		else if GLocale ~= "en" then LProfile = true; end end
 
 		if LProfile then
-			write("TitanBar: " .. L["PWProfil"] .. " '" .. lblName[PrevItemClic]:GetText() .. "' " .. L["PWLoaded"]);
+			write("TitanBar: "..L["PWProfile"].." `"..lblName[PrevItemClic]:GetText().."` "..L["PWLoaded"]);
 			settings = vPProfileSettings[PrevItemClic];
 			settings.PlayerLoc.L = pLLoc;
 			settings.TitanBar.ZT = "Profile";
 			SaveSettings( false );
 			ReloadTitanBar();
 		else
-			write("TitanBar: " .. L["PWFail"]);
+			write("TitanBar: `"..lblName[PrevItemClic]:GetText().."`"..L["PWFail"]);
 		end
 	end
 
 	buttonCreate = Turbine.UI.Lotro.Button();
 	buttonCreate:SetParent( wProfile );
 	buttonCreate:SetText( L["PWCreate"] );
-	buttonCreate:SetSize( buttonCreate:GetTextLength() * 10, 15 ); --Auto size with text lenght
+	buttonCreate:SetSize( buttonCreate:GetTextLength() * 10, 15 ); --Auto size with text length
 	buttonCreate:SetEnabled( true );
 
 	buttonCreate.Click = function( sender, args )
@@ -105,7 +105,7 @@ function frmProfile()
 	buttonSave = Turbine.UI.Lotro.Button();
 	buttonSave:SetParent( CreateCtr );
 	buttonSave:SetText( L["PWSave"] );
-	buttonSave:SetSize( buttonSave:GetTextLength() * 10, 15 ); --Auto size with text lenght
+	buttonSave:SetSize( buttonSave:GetTextLength() * 10, 15 ); --Auto size with text length
 	buttonSave:SetPosition( 0, 25 );
 	buttonSave:SetEnabled( true );
 
@@ -122,8 +122,10 @@ function frmProfile()
 		settings.PlayerLoc.L = L["PLMsg"];
 
 		local vProfile = {};
-		vProfile[InputBox:GetText()] = settings;
+		local strProfileName = InputBox:GetText();
+		vProfile[strProfileName] = settings;
 		table.insert( PProfile, vProfile );
+		write( "TitanBar: "..L["PWNew"].." `"..strProfileName.."` "..L["PWCreated"] );
 		
 		settings.TitanBar.ZT = "Profile";
 		SavePlayerProfile();
@@ -142,7 +144,7 @@ function frmProfile()
 	buttonCancel = Turbine.UI.Lotro.Button();
 	buttonCancel:SetParent( CreateCtr );
 	buttonCancel:SetText( L["PWCancel"] );
-	buttonCancel:SetSize( buttonCancel:GetTextLength() * TM, 15 ); --Auto size with text lenght
+	buttonCancel:SetSize( buttonCancel:GetTextLength() * TM, 15 ); --Auto size with text length
 	buttonCancel:SetPosition( buttonSave:GetLeft() + buttonSave:GetWidth() + 5, 25 );
 	buttonCancel:SetEnabled( true );
 
@@ -210,14 +212,14 @@ function RefreshListBox()
 			DelIcon[i]:SetParent( Ctr[i] );
 			DelIcon[i]:SetPosition( 0, 1 );
 			DelIcon[i]:SetSize( 16, 16 );
-			DelIcon[i]:SetBackground( resources.ListBoxBackground );
+			DelIcon[i]:SetBackground( resources.DelIcon );
 			DelIcon[i]:SetBlendMode( 4 );
 			DelIcon[i]:SetVisible( true );
 			--DelIcon[i]:SetBackColor( Color["blue"] ); -- debug purpose
 				
 			DelIcon[i].MouseClick = function( sender, args )
 				if ( args.Button == Turbine.UI.MouseButton.Left ) then
-					write("TitanBar: " .. L["PWProfil"] .. " '" .. lblName[i]:GetText() .. "' " .. L["PWDeleted"]);
+					write("TitanBar: " .. L["PWProfile"] .. " `" .. lblName[i]:GetText() .. "` " .. L["PWDeleted"]);
 					table.remove( PProfile, i );
 
 					local newt = {};
@@ -278,7 +280,6 @@ end
 function PerformLayout()
 	buttonLoad:SetPosition( 20, ListBox:GetTop() + ListBox:GetHeight() + 5 );
 	buttonCreate:SetPosition( buttonLoad:GetLeft() + buttonLoad:GetWidth() + 15, ListBox:GetTop() + ListBox:GetHeight() + 5 );
-
 	CreateCtr:SetPosition( 20, buttonLoad:GetTop() );
 
 	wProfile:SetHeight( ListBox:GetHeight() + buttonLoad:GetHeight() + 60 );
